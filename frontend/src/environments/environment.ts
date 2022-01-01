@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    apiUrl: 'https://localhost:44344',
-    gyazoAccessToken: ''
+    apiUrl: 'https://localhost:5001',
+    gyazoAccessToken: 'TOKEN'
 };
 
 /*
