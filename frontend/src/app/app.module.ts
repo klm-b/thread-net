@@ -16,9 +16,10 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { AuthDialogComponent } from './components/auth-dialog/auth-dialog.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { MaterialComponentsModule } from './components/common/material-components.module';
+import { UpdatePostDialogComponent } from './components/update-post-dialog/update-post-dialog.component';
 
 @NgModule({
-    declarations: [AppComponent, MainThreadComponent, PostComponent, HomeComponent, UserProfileComponent, AuthDialogComponent, CommentComponent],
+    declarations: [AppComponent, MainThreadComponent, PostComponent, HomeComponent, UserProfileComponent, AuthDialogComponent, CommentComponent, UpdatePostDialogComponent],
     imports: [BrowserModule, BrowserAnimationsModule, HttpClientModule, MaterialComponentsModule, RouterModule.forRoot(AppRoutes), FormsModule],
     exports: [MaterialComponentsModule],
     providers: [

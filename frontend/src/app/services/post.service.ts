@@ -3,6 +3,7 @@ import { HttpInternalService } from './http-internal.service';
 import { Post } from '../models/post/post';
 import { NewReaction } from '../models/reactions/newReaction';
 import { NewPost } from '../models/post/new-post';
+import { UpdatePost } from '../models/post/update-post';
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
@@ -16,6 +17,10 @@ export class PostService {
 
     public createPost(post: NewPost) {
         return this.httpService.postFullRequest<Post>(`${this.routePrefix}`, post);
+    }
+
+    public updatePost(post: UpdatePost) {
+        return this.httpService.putFullRequest<void>(`${this.routePrefix}`, post);
     }
 
     public likePost(reaction: NewReaction) {

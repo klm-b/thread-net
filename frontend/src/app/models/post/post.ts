@@ -5,6 +5,7 @@ import { Reaction } from '../reactions/reaction';
 export interface Post {
     id: number;
     createdAt: Date;
+    isUpdated: boolean;
     author: User;
     previewImage: string;
     body: string;
