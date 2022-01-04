@@ -38,6 +38,15 @@ namespace Thread_.NET.WebAPI.Controllers
             return Ok(await _postService.CreatePost(dto));
         }
 
+        [HttpPut]
+        public async Task<ActionResult<PostDTO>> UpdatePost([FromBody] PostUpdateDTO dto)
+        {
+            dto.AuthorId = this.GetUserIdFromToken();
+            await _postService.UpdatePost(dto);
+
+            return NoContent();
+        }
+
         [HttpPost("like")]
         public async Task<IActionResult> LikePost(NewReactionDTO reaction)
         {

@@ -10,6 +10,7 @@ namespace Thread_.NET.Common.DTO.Post
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsUpdated { get; set; }
         public UserDTO Author { get; set; }
         public string PreviewImage { get; set; }
         public string Body { get; set; }

@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Thread_.NET.BLL.Exceptions;
 using Thread_.NET.BLL.Hubs;
 using Thread_.NET.BLL.Services.Abstract;
 using Thread_.NET.Common.DTO.Post;
@@ -75,6 +77,46 @@ namespace Thread_.NET.BLL.Services
             await _postHub.Clients.All.SendAsync("NewPost", createdPostDTO);
 
             return createdPostDTO;
+        }
+
+        public async Task UpdatePost(PostUpdateDTO postDto)
+        {
+            var postEntity = await _context.Posts
+                .Include(u => u.Preview)
+                .FirstOrDefaultAsync(p => p.Id == postDto.Id); ;
+            
+            if (postEntity == null)
+                throw new NotFoundException(nameof(Post), postDto.Id);
+
+            var timeNow = DateTime.Now;
+            postEntity.Body = postDto.Body;
+            postEntity.UpdatedAt = timeNow;
+
+            if (!string.IsNullOrEmpty(postDto.PreviewImage))
+            {
+                if (postEntity.Preview == null)
+                {
+                    postEntity.Preview = new Image
+                    {
+                        URL = postDto.PreviewImage
+                    };
+                }
+                else
+                {
+                    postEntity.Preview.URL = postDto.PreviewImage;
+                    postEntity.Preview.UpdatedAt = timeNow;
+                }
+            }
+            else
+            {
+                if (postEntity.Preview != null)
+                {
+                    _context.Images.Remove(postEntity.Preview);
+                }
+            }
+
+            _context.Posts.Update(postEntity);
+            await _context.SaveChangesAsync();
         }
     }
 }
