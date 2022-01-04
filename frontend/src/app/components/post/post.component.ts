@@ -11,6 +11,7 @@ import { User } from '../../models/user';
 import { Comment } from '../../models/comment/comment';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 import { SnackBarService } from '../../services/snack-bar.service';
+import { UpdatePostDialogService } from 'src/app/services/update-post-dialog.service';
 
 @Component({
     selector: 'app-post',
@@ -29,6 +30,7 @@ export class PostComponent implements OnDestroy {
     public constructor(
         private authService: AuthenticationService,
         private authDialogService: AuthDialogService,
+        private updatePostDialogService: UpdatePostDialogService,
         private likeService: LikeService,
         private commentService: CommentService,
         private snackBarService: SnackBarService
@@ -93,6 +95,10 @@ export class PostComponent implements OnDestroy {
 
     public openAuthDialog() {
         this.authDialogService.openAuthDialog(DialogType.SignIn);
+    }
+
+    public openUpdatePostDialog(post: Post) {
+        this.updatePostDialogService.openUpdatePostDialog(post)
     }
 
     private catchErrorWrapper(obs: Observable<User>) {
