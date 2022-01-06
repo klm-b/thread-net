@@ -52,6 +52,11 @@ namespace Thread_.NET.DAL.Context
                 .HasMany(p => p.Reactions)
                 .WithOne(r => r.Comment)
                 .HasForeignKey(r => r.CommentId);
+
+            modelBuilder.Entity<Post>().HasQueryFilter(p => !p.IsDeleted);
+            modelBuilder.Entity<Comment>().HasQueryFilter(p => !p.Post.IsDeleted);
+            modelBuilder.Entity<PostReaction>().HasQueryFilter(p => !p.Post.IsDeleted);
+            modelBuilder.Entity<CommentReaction>().HasQueryFilter(p => !p.Comment.Post.IsDeleted);
         }
 
         public static void Seed(this ModelBuilder modelBuilder)
@@ -136,14 +141,15 @@ namespace Thread_.NET.DAL.Context
         public static ICollection<Post> GenerateRandomPosts(ICollection<User> randomUsers, ICollection<Image> previewImages)
         {
             int postId = 1;
+            var now = DateTime.Now;
 
             var postsFake = new Faker<Post>()
                 .RuleFor(p => p.Id, f => postId++)
                 .RuleFor(p => p.Body, f => f.Lorem.Text())
                 .RuleFor(p => p.PreviewId, f => f.PickRandom(previewImages).Id)
                 .RuleFor(p => p.AuthorId, f => f.PickRandom(randomUsers).Id)
-                .RuleFor(pi => pi.CreatedAt, f => DateTime.Now)
-                .RuleFor(pi => pi.UpdatedAt, f => DateTime.Now);
+                .RuleFor(pi => pi.CreatedAt, f => now)
+                .RuleFor(pi => pi.UpdatedAt, f => now);
 
             return postsFake.Generate(ENTITY_COUNT);
         }
@@ -151,14 +157,15 @@ namespace Thread_.NET.DAL.Context
         public static ICollection<Comment> GenerateRandomComments(ICollection<User> users, ICollection<Post> posts)
         {
             int commentId = 1;
+            var now = DateTime.Now;
 
             var commentsFake = new Faker<Comment>()
                 .RuleFor(c => c.Id, f => commentId++)
                 .RuleFor(c => c.Body, f => f.Lorem.Sentence())
                 .RuleFor(c => c.AuthorId, f => f.PickRandom(users).Id)
                 .RuleFor(c => c.PostId, f => f.PickRandom(posts).Id)
-                .RuleFor(pi => pi.CreatedAt, f => DateTime.Now)
-                .RuleFor(pi => pi.UpdatedAt, f => DateTime.Now);
+                .RuleFor(pi => pi.CreatedAt, f => now)
+                .RuleFor(pi => pi.UpdatedAt, f => now);
 
             return commentsFake.Generate(ENTITY_COUNT);
         }
