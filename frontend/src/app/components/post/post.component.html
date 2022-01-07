@@ -19,14 +19,17 @@
         <mat-icon>share</mat-icon>
         <span>Share</span>
       </button>
-      <button (click)="openUpdatePostDialog(post)" *ngIf="currentUser?.id === post.author.id" mat-menu-item>
-        <mat-icon>edit</mat-icon>
-        <span>Edit</span>
-      </button>
-      <button *ngIf="currentUser?.id === post.author.id" mat-menu-item>
-        <mat-icon>delete</mat-icon>
-        <span>Delete</span>
-      </button>
+
+      <ng-template [ngIf]="currentUser?.id === post.author.id">
+        <button (click)="openUpdatePostDialog(post)" mat-menu-item>
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button (click)="openDeletePostDialog(post)" mat-menu-item>
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </ng-template>
     </mat-menu>
   </div>
   <img mat-card-image *ngIf="post.previewImage" mat-card-image src="{{post.previewImage}}" alt="Photo">

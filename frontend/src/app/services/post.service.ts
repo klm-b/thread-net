@@ -23,6 +23,10 @@ export class PostService {
         return this.httpService.putFullRequest<void>(`${this.routePrefix}`, post);
     }
 
+    public deletePost(id: number) {
+        return this.httpService.deleteFullRequest<void>(`${this.routePrefix}/${id}`);
+    }
+
     public likePost(reaction: NewReaction) {
         return this.httpService.postFullRequest<Post>(`${this.routePrefix}/like`, reaction);
     }

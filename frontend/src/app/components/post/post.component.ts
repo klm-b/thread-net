@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Post } from '../../models/post/post';
 import { AuthenticationService } from '../../services/auth.service';
 import { AuthDialogService } from '../../services/auth-dialog.service';
@@ -11,7 +11,8 @@ import { User } from '../../models/user';
 import { Comment } from '../../models/comment/comment';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 import { SnackBarService } from '../../services/snack-bar.service';
-import { UpdatePostDialogService } from 'src/app/services/update-post-dialog.service';
+import { PostDialogsService } from 'src/app/services/post-dialogs.service';
+import { UpdatePost } from 'src/app/models/post/update-post';
 
 @Component({
     selector: 'app-post',
@@ -27,10 +28,12 @@ export class PostComponent implements OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
+    @Output() onDelete = new EventEmitter<number>();
+
     public constructor(
         private authService: AuthenticationService,
         private authDialogService: AuthDialogService,
-        private updatePostDialogService: UpdatePostDialogService,
+        private postDialogsService: PostDialogsService,
         private likeService: LikeService,
         private commentService: CommentService,
         private snackBarService: SnackBarService
@@ -98,7 +101,27 @@ export class PostComponent implements OnDestroy {
     }
 
     public openUpdatePostDialog(post: Post) {
-        this.updatePostDialogService.openUpdatePostDialog(post)
+        this.postDialogsService.openUpdatePostDialog(post)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(
+                (newPost: UpdatePost) => {
+                    if (newPost) {
+                        post.body = newPost.body;
+                        post.previewImage = newPost.previewImage;
+                        post.isUpdated = true;
+                    }
+                }
+            )
+    }
+
+    public openDeletePostDialog(post: Post) {
+        this.postDialogsService.openDeletePostDialog(post)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((isDeleted: Boolean) => {
+                if (isDeleted) {
+                    this.onDelete.next(post.id);
+                }
+            })
     }
 
     private catchErrorWrapper(obs: Observable<User>) {

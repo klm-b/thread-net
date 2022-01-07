@@ -163,6 +163,13 @@ export class MainThreadComponent implements OnInit, OnDestroy {
         }
     }
 
+    public deletePost(id: number) {
+        if (this.cachedPosts.some((x) => x.id === id)) {
+            this.cachedPosts = this.sortPostArray(this.cachedPosts.filter(post => post.id != id));
+            this.posts = this.sortPostArray(this.posts.filter(post => post.id != id));
+        }
+    }
+
     private getUser() {
         this.authService
             .getUser()
