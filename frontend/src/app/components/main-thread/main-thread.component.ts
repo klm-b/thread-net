@@ -152,6 +152,24 @@ export class MainThreadComponent implements OnInit, OnDestroy {
                 this.addNewPost(newPost);
             }
         });
+
+        this.postHub.on('DeletePost', (postId: number) => {
+            if (postId) {
+                this.deletePost(postId);
+            }
+        });
+
+        this.postHub.on('UpdatePost', (updatedPost: Post) => {
+            if (updatedPost) {
+                let post = this.cachedPosts.find((x) => x.id === updatedPost.id)
+
+                if (post) {
+                    post.body = updatedPost.body;
+                    post.previewImage = updatedPost.previewImage;
+                    post.isUpdated = true;
+                }
+            }
+        });
     }
 
     public addNewPost(newPost: Post) {

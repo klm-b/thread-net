@@ -119,6 +119,9 @@ namespace Thread_.NET.BLL.Services
 
             _context.Posts.Update(postEntity);
             await _context.SaveChangesAsync();
+
+            var updatedPostDTO = _mapper.Map<PostDTO>(postEntity);
+            await _postHub.Clients.All.SendAsync("UpdatePost", updatedPostDTO);
         }
 
         public async Task DeletePost(int postId)
@@ -132,6 +135,8 @@ namespace Thread_.NET.BLL.Services
 
             _context.Posts.Remove(postEntity);
             await _context.SaveChangesAsync();
+
+            await _postHub.Clients.All.SendAsync("DeletePost", postId);
         }
     }
 }
