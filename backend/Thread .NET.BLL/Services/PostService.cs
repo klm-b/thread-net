@@ -35,6 +35,7 @@ namespace Thread_.NET.BLL.Services
                     .ThenInclude(comment => comment.Reactions)
                 .Include(post => post.Comments)
                     .ThenInclude(comment => comment.Author)
+                        .ThenInclude(a => a.Avatar)
                 .OrderByDescending(post => post.CreatedAt)
                 .AsSplitQuery()
                 .ToListAsync();
