@@ -36,6 +36,7 @@ namespace Thread_.NET.BLL.Services
                 .Include(post => post.Comments)
                     .ThenInclude(comment => comment.Author)
                 .OrderByDescending(post => post.CreatedAt)
+                .AsSplitQuery()
                 .ToListAsync();
 
             return _mapper.Map<ICollection<Post>, ICollection<PostDTO>>(posts);
