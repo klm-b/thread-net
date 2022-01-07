@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogType } from '../../models/common/auth-dialog-type';
+import { DialogType } from '../../../models/common/auth-dialog-type';
 import { Subject } from 'rxjs';
-import { AuthenticationService } from '../../services/auth.service';
+import { AuthenticationService } from '../../../services/auth.service';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { SnackBarService } from '../../services/snack-bar.service';
+import { SnackBarService } from '../../../services/snack-bar.service';
 import { Post } from 'src/app/models/post/post';
 import { UpdatePost } from 'src/app/models/post/update-post';
 import { PostService } from 'src/app/services/post.service';
@@ -28,7 +28,7 @@ export class UpdatePostDialogComponent implements OnInit, OnDestroy {
         private postService: PostService,
         private gyazoService: GyazoService,
         private snackBarService: SnackBarService
-    ) { }
+    ) {}
 
     public ngOnInit() {
 
