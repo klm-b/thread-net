@@ -118,5 +118,18 @@ namespace Thread_.NET.BLL.Services
             _context.Posts.Update(postEntity);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeletePost(int postId)
+        {
+            var postEntity = await _context.Posts.FirstOrDefaultAsync(u => u.Id == postId);
+
+            if (postEntity == null)
+            {
+                throw new NotFoundException(nameof(User), postId);
+            }
+
+            _context.Posts.Remove(postEntity);
+            await _context.SaveChangesAsync();
+        }
     }
 }
