@@ -4,7 +4,7 @@ import { AuthenticationService } from '../../services/auth.service';
 import { AuthDialogService } from '../../services/auth-dialog.service';
 import { empty, Observable, Subject } from 'rxjs';
 import { DialogType } from '../../models/common/auth-dialog-type';
-import { LikeService } from '../../services/like.service';
+import { ReactionService } from '../../services/reaction.service';
 import { NewComment } from '../../models/comment/new-comment';
 import { CommentService } from '../../services/comment.service';
 import { User } from '../../models/user';
@@ -34,7 +34,7 @@ export class PostComponent implements OnDestroy {
         private authService: AuthenticationService,
         private authDialogService: AuthDialogService,
         private postDialogsService: PostDialogsService,
-        private likeService: LikeService,
+        private reactionsService: ReactionService,
         private commentService: CommentService,
         private snackBarService: SnackBarService
     ) {}
@@ -60,11 +60,11 @@ export class PostComponent implements OnDestroy {
         this.showComments = !this.showComments;
     }
 
-    public likePost() {
+    public likePost(isLike: boolean) {
         if (!this.currentUser) {
             this.catchErrorWrapper(this.authService.getUser())
                 .pipe(
-                    switchMap((userResp) => this.likeService.likePost(this.post, userResp)),
+                    switchMap((userResp) => this.reactionsService.reactToPost(this.post, userResp, isLike)),
                     takeUntil(this.unsubscribe$)
                 )
                 .subscribe((post) => (this.post = post));
@@ -72,8 +72,8 @@ export class PostComponent implements OnDestroy {
             return;
         }
 
-        this.likeService
-            .likePost(this.post, this.currentUser)
+        this.reactionsService
+            .reactToPost(this.post, this.currentUser, isLike)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((post) => (this.post = post));
     }

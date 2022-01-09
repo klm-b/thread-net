@@ -10,5 +10,7 @@ export interface Post {
     previewImage: string;
     body: string;
     comments: Comment[];
-    reactions: Reaction[];
+    likesNumber: number;
+    dislikesNumber: number;
+    isLikedByMe: boolean | null;
 }
