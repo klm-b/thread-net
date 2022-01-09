@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Thread_.NET.BLL.Services;
-using Thread_.NET.Common.DTO.Like;
+using Thread_.NET.Common.DTO.Reaction;
 using Thread_.NET.Common.DTO.Post;
 using Thread_.NET.Extensions;
 
@@ -15,9 +15,9 @@ namespace Thread_.NET.WebAPI.Controllers
     public class PostsController : ControllerBase
     {
         private readonly PostService _postService;
-        private readonly LikeService _likeService;
+        private readonly ReactionService _likeService;
 
-        public PostsController(PostService postService, LikeService likeService)
+        public PostsController(PostService postService, ReactionService likeService)
         {
             _postService = postService;
             _likeService = likeService;
@@ -27,7 +27,7 @@ namespace Thread_.NET.WebAPI.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<ICollection<PostDTO>>> Get()
         {
-            return Ok(await _postService.GetAllPosts());
+            return Ok(await _postService.GetAllPosts(this.GetUserIdFromToken()));
         }
 
         [HttpPost]
@@ -47,12 +47,21 @@ namespace Thread_.NET.WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpPost("like")]
-        public async Task<IActionResult> LikePost(NewReactionDTO reaction)
+        [HttpPost("reactions")]
+        public async Task<IActionResult> ReactToPost(NewReactionDTO reaction)
         {
             reaction.UserId = this.GetUserIdFromToken();
 
-            await _likeService.LikePost(reaction);
+            await _likeService.ReactToPost(reaction);
+            return Ok();
+        }
+
+        [HttpDelete("reactions")]
+        public async Task<IActionResult> DeleteReaction([FromQuery]DeleteReactionDTO reaction)
+        {
+            reaction.UserId = this.GetUserIdFromToken();
+
+            await _likeService.DeleteReaction(reaction);
             return Ok();
         }
 

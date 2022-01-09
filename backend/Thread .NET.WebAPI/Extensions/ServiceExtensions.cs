@@ -29,7 +29,7 @@ namespace Thread_.NET.Extensions
             services.AddScoped<JwtFactory>();
 
             services.AddScoped<AuthService>();
-            services.AddScoped<LikeService>();
+            services.AddScoped<ReactionService>();
             services.AddScoped<PostService>();
             services.AddScoped<UserService>();
             services.AddScoped<CommentService>();

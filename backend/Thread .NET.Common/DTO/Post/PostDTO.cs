@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Thread_.NET.Common.DTO.Comment;
-using Thread_.NET.Common.DTO.Like;
+using Thread_.NET.Common.DTO.Reaction;
 using Thread_.NET.Common.DTO.User;
 
 namespace Thread_.NET.Common.DTO.Post
@@ -16,6 +16,8 @@ namespace Thread_.NET.Common.DTO.Post
         public string Body { get; set; }
 
         public ICollection<CommentDTO> Comments { get; set; }
-        public ICollection<ReactionDTO> Reactions { get; set; }
+        public int LikesNumber { get; set; }
+        public int DislikesNumber { get; set; }
+        public bool? IsLikedByMe { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using Thread_.NET.BLL.Services.Abstract;
 using Thread_.NET.Common.DTO.Post;
 using Thread_.NET.DAL.Context;
 using Thread_.NET.DAL.Entities;
+using Thread_.NET.Common.DTO.User;
 
 namespace Thread_.NET.BLL.Services
 {
@@ -23,14 +24,12 @@ namespace Thread_.NET.BLL.Services
             _postHub = postHub;
         }
 
-        public async Task<ICollection<PostDTO>> GetAllPosts()
+        public async Task<ICollection<PostDTO>> GetAllPosts(int currentUserId)
         {
             var posts = await _context.Posts
                 .Include(post => post.Author)
                     .ThenInclude(author => author.Avatar)
                 .Include(post => post.Preview)
-                .Include(post => post.Reactions)
-                    .ThenInclude(reaction => reaction.User)
                 .Include(post => post.Comments)
                     .ThenInclude(comment => comment.Reactions)
                 .Include(post => post.Comments)
@@ -38,23 +37,37 @@ namespace Thread_.NET.BLL.Services
                         .ThenInclude(a => a.Avatar)
                 .OrderByDescending(post => post.CreatedAt)
                 .AsSplitQuery()
+                .AsNoTracking()
                 .ToListAsync();
 
-            return _mapper.Map<ICollection<Post>, ICollection<PostDTO>>(posts);
-        }
+            ICollection<PostDTO> dtos = _mapper.Map<ICollection<PostDTO>>(posts);
 
-        public async Task<ICollection<PostDTO>> GetAllPosts(int userId)
-        {
-            var posts = await _context.Posts
-                .Include(post => post.Author)
-                    .ThenInclude(author => author.Avatar)
-                .Include(post => post.Preview)
-                .Include(post => post.Comments)
-                    .ThenInclude(comment => comment.Author)
-                .Where(p => p.AuthorId == userId) // Filter here
-                .ToListAsync();
+            // get number of likes and dislikes in a single query
+            var postsReactions = _context.PostReactions
+                .IgnoreQueryFilters()
+                .GroupBy(p => p.PostId).Select(g => new
+                {
+                    PostId = g.Key,
+                    LikesNumber = g.Count(r => r.IsLike == true),
+                    DislikesNumber = g.Count(r => r.IsLike == false),
+                    IsLikedByMe = g.Count(r => r.IsLike == true && r.UserId == currentUserId) > 0,
+                    IsDislikedByMe = g.Count(r => r.IsLike == false && r.UserId == currentUserId) > 0,
+                });
 
-            return _mapper.Map<ICollection<PostDTO>>(posts);
+            // left outer join of dtos and reactions
+            dtos = dtos.GroupJoin(postsReactions, d => d.Id, a => a.PostId,
+                    (dto, reactions) => new { Dto = dto, Reactions = reactions })
+                .SelectMany(x => x.Reactions.DefaultIfEmpty(), (dto, reactions) =>
+                {
+                    dto.Dto.LikesNumber = reactions?.LikesNumber ?? 0;
+                    dto.Dto.DislikesNumber = reactions?.DislikesNumber ?? 0;
+                    dto.Dto.IsLikedByMe = reactions is not null
+                        ? (reactions.IsLikedByMe ? true : reactions.IsDislikedByMe ? false : null)
+                        : null;
+                    return dto.Dto;
+                }).ToList();
+
+            return dtos;
         }
 
         public async Task<PostDTO> CreatePost(PostCreateDTO postDto)
@@ -64,16 +77,14 @@ namespace Thread_.NET.BLL.Services
             _context.Posts.Add(postEntity);
             await _context.SaveChangesAsync();
 
-<<<<<<< HEAD
             var createdPost = await _context.Posts
                 .Include(post => post.Author)
-					.ThenInclude(author => author.Avatar)
+                    .ThenInclude(author => author.Avatar)
                 .FirstAsync(post => post.Id == postEntity.Id);
-=======
+
             // Include Author info
 			var author = await _context.Users.Include(x => x.Avatar).FirstAsync(x => x.Id == postEntity.AuthorId);
             postEntity.Author = author;
->>>>>>> f0f528d (Added logic)
 
             var createdPostDTO = _mapper.Map<PostDTO>(createdPost);
             await _postHub.Clients.All.SendAsync("NewPost", createdPostDTO);
@@ -86,7 +97,7 @@ namespace Thread_.NET.BLL.Services
             var postEntity = await _context.Posts
                 .Include(u => u.Preview)
                 .FirstOrDefaultAsync(p => p.Id == postDto.Id); ;
-            
+
             if (postEntity == null)
                 throw new NotFoundException(nameof(Post), postDto.Id);
 

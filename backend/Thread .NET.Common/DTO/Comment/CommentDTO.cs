@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Thread_.NET.Common.DTO.Like;
+using Thread_.NET.Common.DTO.Reaction;
 using Thread_.NET.Common.DTO.User;
 
 namespace Thread_.NET.Common.DTO.Comment
