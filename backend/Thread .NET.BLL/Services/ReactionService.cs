@@ -20,6 +20,7 @@ namespace Thread_.NET.BLL.Services
                 .Include(r => r.User)
                     .ThenInclude(u => u.Avatar)
                 .Where(r => r.PostId == postId)
+                .OrderByDescending(r => r.CreatedAt)
                 .AsNoTracking()
                 .ToListAsync();
 
