@@ -124,6 +124,10 @@ export class PostComponent implements OnDestroy {
             })
     }
 
+    public openReactionsDialog(post: Post) {
+        this.postDialogsService.openReactionsDialog(post);
+    }
+
     private catchErrorWrapper(obs: Observable<User>) {
         return obs.pipe(
             catchError(() => {

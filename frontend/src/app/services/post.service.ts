@@ -5,6 +5,7 @@ import { NewReaction } from '../models/reactions/newReaction';
 import { NewPost } from '../models/post/new-post';
 import { UpdatePost } from '../models/post/update-post';
 import { DeleteReaction } from '../models/reactions/deleteReaction';
+import { Reaction } from '../models/reactions/reaction';
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
@@ -34,5 +35,9 @@ export class PostService {
 
     public deleteReaction(reaction: DeleteReaction) {
         return this.httpService.deleteFullRequest<void>(`${this.routePrefix}/reactions`, reaction);
+    }
+
+    public getReactionsToPost(postId: number) {
+        return this.httpService.getFullRequest<Reaction[]>(`${this.routePrefix}/reactions/${postId}`);
     }
 }

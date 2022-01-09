@@ -7,6 +7,8 @@ import { SnackBarService } from './snack-bar.service';
 import { Post } from '../models/post/post';
 import { UpdatePost } from '../models/post/update-post';
 import { DeletePostDialogComponent } from '../components/post/delete-post-dialog/delete-post-dialog.component';
+import { ReactionsDialogComponent } from '../components/post/reactions-dialog/reactions-dialog.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class PostDialogsService implements OnDestroy {
@@ -34,6 +36,19 @@ export class PostDialogsService implements OnDestroy {
         });
 
         return dialog.afterClosed();
+    }
+
+    public openReactionsDialog(post: Post) {
+        const dialog = this.dialog.open(ReactionsDialogComponent, {
+            data: { post: post },
+            minWidth: 500,
+            autoFocus: false,
+            backdropClass: 'dialog-backdrop'
+        });
+
+        return dialog.afterClosed()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe();
     }
 
     public ngOnDestroy() {

@@ -31,6 +31,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSortModule } from '@angular/material/sort';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
     imports: [
@@ -64,7 +65,8 @@ import { MatNativeDateModule } from '@angular/material/core';
         MatSnackBarModule,
         MatSliderModule,
         MatSlideToggleModule,
-        MatSortModule
+        MatSortModule,
+        MatButtonToggleModule
     ],
     exports: [
         MatToolbarModule,
@@ -96,7 +98,8 @@ import { MatNativeDateModule } from '@angular/material/core';
         MatSnackBarModule,
         MatSliderModule,
         MatSlideToggleModule,
-        MatSortModule
+        MatSortModule,
+        MatButtonToggleModule
     ],
     declarations: []
 })
