@@ -47,6 +47,12 @@ namespace Thread_.NET.WebAPI.Controllers
             return NoContent();
         }
 
+        [HttpGet("reactions/{postId}")]
+        public async Task<IActionResult> GetPostReactions(int postId)
+        {
+            return Ok(await _likeService.GetPostReactions(postId));
+        }
+
         [HttpPost("reactions")]
         public async Task<IActionResult> ReactToPost(NewReactionDTO reaction)
         {

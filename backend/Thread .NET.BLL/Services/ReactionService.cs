@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Thread_.NET.BLL.Exceptions;
@@ -13,6 +14,18 @@ namespace Thread_.NET.BLL.Services
     {
         public ReactionService(ThreadContext context, IMapper mapper) : base(context, mapper) { }
 
+        public async Task<ICollection<ReactionDTO>> GetPostReactions(int postId)
+        {
+            var reactions = await _context.PostReactions
+                .Include(r => r.User)
+                    .ThenInclude(u => u.Avatar)
+                .Where(r => r.PostId == postId)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return _mapper.Map<ICollection<ReactionDTO>>(reactions);
+        }
+        
         public async Task ReactToPost(NewReactionDTO newReaction)
         {
             var reaction = await _context.PostReactions
