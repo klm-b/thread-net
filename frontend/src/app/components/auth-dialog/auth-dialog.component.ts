@@ -29,7 +29,7 @@ export class AuthDialogComponent implements OnInit, OnDestroy {
     ) {}
 
     public ngOnInit() {
-        this.avatar = 'https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/orig';
+        this.avatar = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
         this.title = this.data.dialogType === DialogType.SignIn ? 'Sign In' : 'Sign Up';
     }
 
