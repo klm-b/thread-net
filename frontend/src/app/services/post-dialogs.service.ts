@@ -41,7 +41,7 @@ export class PostDialogsService implements OnDestroy {
     public openReactionsDialog(post: Post) {
         const dialog = this.dialog.open(ReactionsDialogComponent, {
             data: { post: post },
-            minWidth: 500,
+            width: "500px",
             autoFocus: false,
             backdropClass: 'dialog-backdrop'
         });

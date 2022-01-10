@@ -1,10 +1,11 @@
-<mat-card class="post-create-container" *ngIf="currentUser && showPostContainer">
+<mat-card class="post-create-container mat-elevation-z4" *ngIf="currentUser && showPostContainer">
   <div *ngIf="loading" class="mat-spinner-wrapper">
     <mat-spinner></mat-spinner>
   </div>
   <mat-card-content>
     <mat-form-field>
-      <textarea [(ngModel)]="post.body" matInput placeholder="Write something..."></textarea>
+      <textarea [(ngModel)]="post.body" cdkTextareaAutosize cdkAutosizeMinRows="3" matInput
+        placeholder="Write something..."></textarea>
     </mat-form-field>
     <div class="image-container">
       <mat-icon aria-label="Send" (click)="removeImage()">close</mat-icon>
@@ -16,7 +17,7 @@
     <button mat-icon-button color="accent" (click)="file.click()">
       <mat-icon aria-label="Choose an image">image</mat-icon>
     </button>
-    <button mat-icon-button color="primary" matTooltip="Post it" (click)="sendPost()">
+    <button mat-icon-button color="accent" matTooltip="Post it" (click)="sendPost()">
       <mat-icon aria-label="Send">send</mat-icon>
     </button>
   </mat-card-actions>
@@ -25,14 +26,14 @@
   <p class="link" (click)="openAuthDialog()">Want to post? Sign in</p>
 </mat-toolbar>
 
-<mat-card class="posts-container">
+<div class="posts-container">
   <div *ngIf="loadingPosts" class="mat-spinner-wrapper posts-spinner">
     <mat-spinner></mat-spinner>
   </div>
   <div class="main-thread">
     <div class="main-actions" *ngIf="currentUser">
-      <button mat-raised-button matTooltip="Write a post" (click)="toggleNewPostContainer()">
-        <mat-icon color="accent">add_comment</mat-icon>
+      <button mat-fab color="primary" matTooltip="Write a post" (click)="toggleNewPostContainer()">
+        <mat-icon>add_comment</mat-icon>
       </button>
       <mat-slide-toggle (change)="sliderChanged($event)">Only mine</mat-slide-toggle>
     </div>
@@ -43,4 +44,4 @@
       <app-post [post]="_post" [currentUser]="currentUser" (onDelete)="deletePost($event)"></app-post>
     </div>
   </div>
-</mat-card>
+</div>

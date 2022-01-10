@@ -1,8 +1,5 @@
 <h2 mat-dialog-title>Reactions</h2>
 <mat-dialog-content>
-    <div *ngIf="loading" class="mat-spinner">
-        <mat-spinner></mat-spinner>
-    </div>
     <mat-button-toggle-group value="all" (change)="onFilterChange($event.value)" aria-label="Reactions filter">
         <mat-button-toggle value="all">
             <mat-icon color="primary">thumbs_up_down</mat-icon>
@@ -17,6 +14,9 @@
             <span class="filter-button-text">Dislikes</span>
         </mat-button-toggle>
     </mat-button-toggle-group>
+    <div *ngIf="loading" class="mat-spinner">
+        <mat-spinner></mat-spinner>
+    </div>
     <mat-list>
         <mat-list-item *ngFor="let reaction of reactions">
             <img draggable="false" matListAvatar src="{{reaction.user.avatar}}" alt="Avatar">

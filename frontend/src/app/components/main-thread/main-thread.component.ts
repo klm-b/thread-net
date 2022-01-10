@@ -44,7 +44,7 @@ export class MainThreadComponent implements OnInit, OnDestroy {
         private gyazoService: GyazoService,
         private authDialogService: AuthDialogService,
         private eventService: EventService
-    ) { }
+    ) {}
 
     public ngOnDestroy() {
         this.unsubscribe$.next();
@@ -97,7 +97,7 @@ export class MainThreadComponent implements OnInit, OnDestroy {
                 this.post.previewImage = undefined;
                 this.loading = false;
             },
-            (error) => this.snackBarService.showErrorMessage(error)
+            (error) => this.snackBarService.showErrorMessage(error || "An error occurred while sending")
         );
     }
 

@@ -1,7 +1,7 @@
-<mat-card [ngClass]="{'post-with-comments': showComments}">
+<mat-card [ngClass]="{'post-with-comments': showComments}" class="mat-elevation-z4">
   <div class="mat-card-header">
     <div class="post-info">
-      <img mat-card-avatar src="{{post.author.avatar}}" alt="Avatar">
+      <img draggable="false" mat-card-avatar src="{{post.author.avatar}}" alt="Avatar">
       <div>
         <mat-card-title>{{post.author.userName}}</mat-card-title>
         <div class="date">{{post.createdAt | date:'d/M/yy, h:mm a'}}{{post.isUpdated ? "(edited)" : ""}}</div>
@@ -35,7 +35,7 @@
   </div>
   <img mat-card-image *ngIf="post.previewImage" mat-card-image src="{{post.previewImage}}" alt="Photo">
   <mat-card-content>
-    <p>{{post.body}}</p>
+    <p class="post-body">{{post.body}}</p>
   </mat-card-content>
   <mat-card-actions class="actions-buttons" align="end">
     <button mat-icon-button [color]="post.isLikedByMe ? 'accent': 'primary'" (click)="likePost(true)">
