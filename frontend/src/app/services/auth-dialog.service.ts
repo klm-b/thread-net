@@ -24,11 +24,7 @@ export class AuthDialogService implements OnDestroy {
         dialog
             .afterClosed()
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((result: User) => {
-                if (result) {
-                    this.authService.setUser(result);
-                }
-            });
+            .subscribe();
     }
 
     public ngOnDestroy() {

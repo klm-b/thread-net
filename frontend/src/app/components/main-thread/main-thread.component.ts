@@ -57,15 +57,13 @@ export class MainThreadComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this.registerHub();
         this.getPosts();
-        this.getUser();
+
 
         this.eventService.userChangedEvent$.pipe(takeUntil(this.unsubscribe$)).subscribe((user) => {
             this.currentUser = user;
             this.post.authorId = this.currentUser ? this.currentUser.id : undefined;
 
-            if (this.currentUser) {
-                this.getPosts();
-            } else {
+            if (!this.currentUser) {
                 this.selectedThread = 0;
                 this.cachedPosts.forEach(post => post.isLikedByMe = null)
             }
