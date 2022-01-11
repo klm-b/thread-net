@@ -24,9 +24,9 @@ namespace Thread_.NET.BLL.Services
             _postHub = postHub;
         }
 
-        public async Task<ICollection<PostDTO>> GetAllPosts(int currentUserId)
+        private IQueryable<Post> GetPostsQuery()
         {
-            var posts = await _context.Posts
+            return _context.Posts
                 .Include(post => post.Author)
                     .ThenInclude(author => author.Avatar)
                 .Include(post => post.Preview)
@@ -37,8 +37,12 @@ namespace Thread_.NET.BLL.Services
                         .ThenInclude(a => a.Avatar)
                 .OrderByDescending(post => post.CreatedAt)
                 .AsSplitQuery()
-                .AsNoTracking()
-                .ToListAsync();
+                .AsNoTracking();
+        }
+
+        public async Task<ICollection<PostDTO>> GetAllPosts(int currentUserId)
+        {
+            var posts = await GetPostsQuery().ToListAsync();
 
             ICollection<PostDTO> dtos = _mapper.Map<ICollection<PostDTO>>(posts);
 
@@ -64,6 +68,35 @@ namespace Thread_.NET.BLL.Services
                     dto.Dto.IsLikedByMe = reactions is not null
                         ? (reactions.IsLikedByMe ? true : reactions.IsDislikedByMe ? false : null)
                         : null;
+                    return dto.Dto;
+                }).ToList();
+
+            return dtos;
+        }
+
+        public async Task<ICollection<PostDTO>> GetAllPosts()
+        {
+            var posts = await GetPostsQuery().ToListAsync();
+
+            ICollection<PostDTO> dtos = _mapper.Map<ICollection<PostDTO>>(posts);
+
+            // get number of likes and dislikes in a single query
+            var postsReactions = _context.PostReactions
+                .IgnoreQueryFilters()
+                .GroupBy(p => p.PostId).Select(g => new
+                {
+                    PostId = g.Key,
+                    LikesNumber = g.Count(r => r.IsLike == true),
+                    DislikesNumber = g.Count(r => r.IsLike == false),
+                });
+
+            // left outer join of dtos and reactions
+            dtos = dtos.GroupJoin(postsReactions, d => d.Id, a => a.PostId,
+                    (dto, reactions) => new { Dto = dto, Reactions = reactions })
+                .SelectMany(x => x.Reactions.DefaultIfEmpty(), (dto, reactions) =>
+                {
+                    dto.Dto.LikesNumber = reactions?.LikesNumber ?? 0;
+                    dto.Dto.DislikesNumber = reactions?.DislikesNumber ?? 0;
                     return dto.Dto;
                 }).ToList();
 

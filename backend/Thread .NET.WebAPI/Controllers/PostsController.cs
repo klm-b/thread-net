@@ -27,7 +27,10 @@ namespace Thread_.NET.WebAPI.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<ICollection<PostDTO>>> Get()
         {
-            return Ok(await _postService.GetAllPosts(this.GetUserIdFromToken()));
+
+            return Ok(await (User.Identity.IsAuthenticated
+                ? _postService.GetAllPosts(this.GetUserIdFromToken())
+                : _postService.GetAllPosts()));
         }
 
         [HttpPost]
