@@ -19,9 +19,6 @@ export class AuthDialogService implements OnDestroy {
             minWidth: 300,
             autoFocus: true,
             backdropClass: 'dialog-backdrop',
-            position: {
-                top: '0'
-            }
         });
 
         dialog
