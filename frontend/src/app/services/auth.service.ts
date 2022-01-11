@@ -44,10 +44,11 @@ export class AuthenticationService {
     }
 
     public logout() {
-        this.revokeRefreshToken();
-        this.removeTokensFromStorage();
-        this.user = undefined;
-        this.eventService.userChanged(undefined);
+        this.revokeRefreshToken().subscribe(() => {
+            this.removeTokensFromStorage();
+            this.user = undefined;
+            this.eventService.userChanged(undefined);
+        })
     }
 
     public areTokensExist() {
@@ -56,7 +57,7 @@ export class AuthenticationService {
 
     public revokeRefreshToken() {
         return this.httpService.postFullRequest<AccessTokenDto>(`${this.routePrefix}/token/revoke`, {
-            refreshToken: localStorage.getItem('refreshToken')
+            refreshToken: JSON.parse(localStorage.getItem('refreshToken'))
         });
     }
 
