@@ -14,6 +14,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { SnackBarService } from '../../services/snack-bar.service';
 import { environment } from 'src/environments/environment';
 import { GyazoService } from 'src/app/services/gyazo.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
     selector: 'app-main-thread',
@@ -23,8 +24,9 @@ import { GyazoService } from 'src/app/services/gyazo.service';
 export class MainThreadComponent implements OnInit, OnDestroy {
     public posts: Post[] = [];
     public cachedPosts: Post[] = [];
+    public favoritePosts: Post[] = [];
     public isOnlyMine = false;
-
+    public selectedThread: number = 0;
     public currentUser: User;
     public imageUrl: string;
     public imageFile: File;
@@ -60,6 +62,13 @@ export class MainThreadComponent implements OnInit, OnDestroy {
         this.eventService.userChangedEvent$.pipe(takeUntil(this.unsubscribe$)).subscribe((user) => {
             this.currentUser = user;
             this.post.authorId = this.currentUser ? this.currentUser.id : undefined;
+
+            if (this.currentUser) {
+                this.getPosts();
+            } else {
+                this.selectedThread = 0;
+                this.cachedPosts.forEach(post => post.isLikedByMe = null)
+            }
         });
     }
 
@@ -72,9 +81,27 @@ export class MainThreadComponent implements OnInit, OnDestroy {
                 (resp) => {
                     this.loadingPosts = false;
                     this.posts = this.cachedPosts = resp.body;
+                    this.favoritePosts = this.cachedPosts.filter(p => p.isLikedByMe);
                 },
                 (error) => (this.loadingPosts = false)
             );
+    }
+
+    threadChanged(tabChangeEvent: MatTabChangeEvent): void {
+        switch (tabChangeEvent.index) {
+            case 0:
+                if (this.isOnlyMine)
+                    this.posts = this.cachedPosts.filter((x) => x.author.id === this.currentUser.id);
+                else
+                    this.posts = this.cachedPosts;
+                break;
+
+            case 1:
+                this.favoritePosts = this.cachedPosts.filter(p => p.isLikedByMe);
+                break;
+            default:
+                break;
+        }
     }
 
     public sendPost() {

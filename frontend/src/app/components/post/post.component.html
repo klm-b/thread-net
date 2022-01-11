@@ -11,8 +11,8 @@
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button (click)="openReactionsDialog(post)" [disabled]="post.likesNumber === 0 && post.dislikesNumber === 0"
-        mat-menu-item>
+      <button (click)="openReactionsDialog(post)"
+        [disabled]="!currentUser || (post.likesNumber === 0 && post.dislikesNumber === 0)" mat-menu-item>
         <mat-icon>thumbs_up_down</mat-icon>
         <span>Reactions</span>
       </button>
