@@ -20,13 +20,19 @@ namespace Thread_.NET.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<CommentDTO>> CreateComment([FromBody] NewCommentDTO comment)
         {
             comment.AuthorId = this.GetUserIdFromToken();
             return Ok(await _commentService.CreateComment(comment));
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateComment([FromBody] CommentUpdateDTO dto)
+        {
+            dto.AuthorId = this.GetUserIdFromToken();
+            await _commentService.UpdateComment(dto);
+
+            return NoContent();
         }
     }
 }
