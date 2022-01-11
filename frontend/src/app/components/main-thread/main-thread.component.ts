@@ -214,6 +214,10 @@ export class MainThreadComponent implements OnInit, OnDestroy {
     }
 
     private getUser() {
+        if (!this.authService.areTokensExist()) {
+            return;
+        }
+
         this.authService
             .getUser()
             .pipe(takeUntil(this.unsubscribe$))
