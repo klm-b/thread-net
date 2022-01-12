@@ -5,6 +5,7 @@ import { Comment } from '../models/comment/comment';
 import { UpdateComment } from '../models/comment/update-comment';
 import { NewReaction } from '../models/reactions/newReaction';
 import { DeleteReaction } from '../models/reactions/deleteReaction';
+import { Reaction } from '../models/reactions/reaction';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService {
@@ -34,5 +35,9 @@ export class CommentService {
 
     public deleteReaction(reaction: DeleteReaction) {
         return this.httpService.deleteFullRequest<void>(`${this.routePrefix}/reactions`, reaction);
+    }
+
+    public getReactionsToComment(commentId: number) {
+        return this.httpService.getFullRequest<Reaction[]>(`${this.routePrefix}/reactions/${commentId}`);
     }
 }

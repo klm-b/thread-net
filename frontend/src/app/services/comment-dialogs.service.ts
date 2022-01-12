@@ -6,6 +6,8 @@ import { Comment } from '../models/comment/comment';
 import { UpdateCommentDialogComponent } from '../components/comment/update-comment-dialog/update-comment-dialog.component';
 import { UpdateComment } from '../models/comment/update-comment';
 import { DeleteCommentDialogComponent } from '../components/comment/delete-comment-dialog/delete-comment-dialog.component';
+import { CommentReactionsDialogComponent } from '../components/comment/comment-reactions-dialog/comment-reactions-dialog.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class CommentDialogsService implements OnDestroy {
@@ -33,6 +35,19 @@ export class CommentDialogsService implements OnDestroy {
         });
 
         return dialog.afterClosed();
+    }
+
+    public openReactionsDialog(comment: Comment) {
+        const dialog = this.dialog.open(CommentReactionsDialogComponent, {
+            data: { comment: comment },
+            width: "500px",
+            autoFocus: false,
+            backdropClass: 'dialog-backdrop'
+        });
+
+        return dialog.afterClosed()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe();
     }
 
     public ngOnDestroy() {

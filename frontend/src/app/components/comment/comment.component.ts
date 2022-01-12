@@ -45,6 +45,10 @@ export class CommentComponent {
             })
     }
 
+    public openReactionsDialog(comment: Comment) {
+        this.commentDialogsService.openReactionsDialog(comment);
+    }
+
     public reactToComment(isLike: boolean) {
         this.reactionsService
             .reactToComment(this.comment, this.currentUser, isLike)
