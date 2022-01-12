@@ -186,7 +186,7 @@ namespace Thread_.NET.BLL.Services
 
             if (postEntity == null)
             {
-                throw new NotFoundException(nameof(User), postId);
+                throw new NotFoundException(nameof(Post), postId);
             }
 
             _context.Posts.Remove(postEntity);
