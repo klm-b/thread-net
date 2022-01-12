@@ -130,7 +130,8 @@ namespace Thread_.NET.DAL.Context
                 Email = "test@gmail.com",
                 Password = hashedPassword,
                 Salt = salt,
-                UserName = "testUser"
+                UserName = "testUser",
+                Avatar = new Image { URL = "https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png" }
             };
 
             generatedUsers.Add(myUser);

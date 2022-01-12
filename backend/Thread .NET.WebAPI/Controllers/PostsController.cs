@@ -70,7 +70,7 @@ namespace Thread_.NET.WebAPI.Controllers
         {
             reaction.UserId = this.GetUserIdFromToken();
 
-            await _likeService.DeleteReaction(reaction);
+            await _likeService.DeletePostReaction(reaction);
             return Ok();
         }
 

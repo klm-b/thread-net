@@ -54,7 +54,7 @@ namespace Thread_.NET.BLL.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteReaction(DeleteReactionDTO deleteReaction)
+        public async Task DeletePostReaction(DeleteReactionDTO deleteReaction)
         {
             var reaction = await _context.PostReactions
                 .Where(x => x.UserId == deleteReaction.UserId && x.PostId == deleteReaction.EntityId)
@@ -64,6 +64,48 @@ namespace Thread_.NET.BLL.Services
                 throw new NotFoundException(nameof(DeleteReactionDTO));
 
             _context.PostReactions.Remove(reaction);
+
+            await _context.SaveChangesAsync();
+            return;
+        }
+
+        public async Task ReactToComment(NewReactionDTO newReaction)
+        {
+            var reaction = await _context.CommentReactions
+                .Where(x => x.UserId == newReaction.UserId && x.CommentId == newReaction.EntityId)
+                .FirstOrDefaultAsync();
+
+            if (reaction is not null)
+            {
+                _context.CommentReactions.Remove(reaction);
+
+                if (reaction.IsLike == newReaction.IsLike)
+                {
+                    await _context.SaveChangesAsync();
+                    return;
+                }
+            }
+
+            _context.CommentReactions.Add(new DAL.Entities.CommentReaction
+            {
+                CommentId = newReaction.EntityId,
+                IsLike = newReaction.IsLike,
+                UserId = newReaction.UserId
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteCommentReaction(DeleteReactionDTO deleteReaction)
+        {
+            var reaction = await _context.CommentReactions
+                .Where(x => x.UserId == deleteReaction.UserId && x.CommentId == deleteReaction.EntityId)
+                .FirstOrDefaultAsync();
+
+            if (reaction is null)
+                throw new NotFoundException(nameof(DeleteReactionDTO));
+
+            _context.CommentReactions.Remove(reaction);
 
             await _context.SaveChangesAsync();
             return;
