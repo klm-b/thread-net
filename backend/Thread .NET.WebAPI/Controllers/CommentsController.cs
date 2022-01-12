@@ -44,6 +44,12 @@ namespace Thread_.NET.WebAPI.Controllers
             return NoContent();
         }
 
+        [HttpGet("reactions/{commentId}")]
+        public async Task<IActionResult> GetCommentsReactions(int commentId)
+        {
+            return Ok(await _likeService.GetCommentReactions(commentId));
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {

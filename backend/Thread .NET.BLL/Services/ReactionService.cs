@@ -69,6 +69,19 @@ namespace Thread_.NET.BLL.Services
             return;
         }
 
+        public async Task<ICollection<ReactionDTO>> GetCommentReactions(int commentId)
+        {
+            var reactions = await _context.CommentReactions
+                .Include(r => r.User)
+                    .ThenInclude(u => u.Avatar)
+                .Where(r => r.CommentId == commentId)
+                .OrderByDescending(r => r.CreatedAt)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return _mapper.Map<ICollection<ReactionDTO>>(reactions);
+        }
+
         public async Task ReactToComment(NewReactionDTO newReaction)
         {
             var reaction = await _context.CommentReactions
