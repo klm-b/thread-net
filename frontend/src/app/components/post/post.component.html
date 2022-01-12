@@ -1,4 +1,7 @@
 <mat-card [ngClass]="{'post-with-comments': showComments}" class="mat-elevation-z4">
+  <div *ngIf="loadingComments" class="mat-spinner-wrapper comments-loader">
+    <mat-spinner></mat-spinner>
+  </div>
   <div class="mat-card-header">
     <div class="post-info">
       <img draggable="false" mat-card-avatar src="{{post.author.avatar}}" alt="Avatar">
@@ -49,23 +52,23 @@
         thumb_down</mat-icon>
     </button>
     <button mat-icon-button color="basic" (click)=" toggleComments()">
-      <mat-icon matBadge="{{post.comments.length}}" matBadgeColor="warn" matBadgeSize="medium"
-        [matBadgeHidden]="post.comments.length === 0" aria-label="Add comment">comment</mat-icon>
+      <mat-icon matBadge="{{post.commentsNumber}}" matBadgeColor="primary" matBadgeSize="medium"
+        [matBadgeHidden]="post.commentsNumber === 0" aria-label="Add comment">comment</mat-icon>
     </button>
   </mat-card-actions>
   <div *ngIf="showComments">
     <mat-divider></mat-divider>
     <div class="new-comment">
       <mat-form-field>
-        <textarea [(ngModel)]="newComment.body" matInput placeholder="Comment it..."></textarea>
+        <textarea [(ngModel)]="newComment.body" cdkTextareaAutosize matInput placeholder="Comment it..."></textarea>
       </mat-form-field>
-      <button mat-icon-button color="primary" matTooltip="Send" (click)="sendComment()">
+      <button mat-icon-button color="accent" matTooltip="Send" (click)="sendComment()">
         <mat-icon aria-label="Send">send</mat-icon>
       </button>
     </div>
-    <div *ngIf="post.comments.length > 0" class="comments-count">
-      Just {{post.comments.length}} in all
+    <div *ngIf="comments?.length > 0" class="comments-count">
+      Just {{comments?.length ?? 0}} in all
     </div>
-    <app-comment *ngFor="let _comment of post.comments" [comment]="_comment"></app-comment>
+    <app-comment *ngFor="let _comment of comments" [comment]="_comment"></app-comment>
   </div>
 </mat-card>

@@ -22,7 +22,8 @@ import { UpdatePost } from 'src/app/models/post/update-post';
 export class PostComponent implements OnDestroy {
     @Input() public post: Post;
     @Input() public currentUser: User;
-
+    public comments: Comment[] = null;
+    public loadingComments = false;
     public showComments = false;
     public newComment = {} as NewComment;
 
@@ -52,12 +53,31 @@ export class PostComponent implements OnDestroy {
                     if (user) {
                         this.currentUser = user;
                         this.showComments = !this.showComments;
+                        if (this.post.commentsNumber > 0) this.loadComments();
                     }
                 });
             return;
         }
 
         this.showComments = !this.showComments;
+        if (this.comments === null && this.post.commentsNumber > 0) this.loadComments();
+    }
+
+    public loadComments() {
+        this.loadingComments = true;
+        this.commentService
+            .getCommentsToPost(this.post.id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(
+                (resp) => {
+                    this.loadingComments = false;
+                    this.comments = resp.body;
+                },
+                (error) => {
+                    this.snackBarService.showErrorMessage(error || "An error occurred while loading comments")
+                    this.loadingComments = false;
+                }
+            );
     }
 
     public likePost(isLike: boolean) {
@@ -88,7 +108,7 @@ export class PostComponent implements OnDestroy {
             .subscribe(
                 (resp) => {
                     if (resp) {
-                        this.post.comments = this.sortCommentArray(this.post.comments.concat(resp.body));
+                        this.comments = this.sortCommentArray(this.comments.concat(resp.body));
                         this.newComment.body = undefined;
                     }
                 },

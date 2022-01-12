@@ -19,6 +19,12 @@ namespace Thread_.NET.WebAPI.Controllers
             _commentService = commentService;
         }
 
+        [HttpGet("{postId}")]
+        public async Task<ActionResult<CommentDTO>> GetPostComments(int postId)
+        {
+            return Ok(await _commentService.GetPostComments(postId, this.GetUserIdFromToken()));
+        }
+
         [HttpPost]
         public async Task<ActionResult<CommentDTO>> CreateComment([FromBody] NewCommentDTO comment)
         {

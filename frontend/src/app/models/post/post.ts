@@ -9,8 +9,8 @@ export interface Post {
     author: User;
     previewImage: string;
     body: string;
-    comments: Comment[];
     likesNumber: number;
     dislikesNumber: number;
+    commentsNumber: number;
     isLikedByMe: boolean | null;
 }

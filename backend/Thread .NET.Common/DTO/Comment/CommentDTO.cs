@@ -12,6 +12,8 @@ namespace Thread_.NET.Common.DTO.Comment
         public UserDTO Author { get; set; }
         public string Body { get; set; }
 
-        public ICollection<ReactionDTO> Reactions { get; set; }
+        public int LikesNumber { get; set; }
+        public int DislikesNumber { get; set; }
+        public bool? IsLikedByMe { get; set; }
     }
 }

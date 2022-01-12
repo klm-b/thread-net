@@ -30,13 +30,7 @@ namespace Thread_.NET.BLL.Services
                 .Include(post => post.Author)
                     .ThenInclude(author => author.Avatar)
                 .Include(post => post.Preview)
-                .Include(post => post.Comments)
-                    .ThenInclude(comment => comment.Reactions)
-                .Include(post => post.Comments)
-                    .ThenInclude(comment => comment.Author)
-                        .ThenInclude(a => a.Avatar)
                 .OrderByDescending(post => post.CreatedAt)
-                .AsSplitQuery()
                 .AsNoTracking();
         }
 
@@ -68,6 +62,24 @@ namespace Thread_.NET.BLL.Services
                     dto.Dto.IsLikedByMe = reactions is not null
                         ? (reactions.IsLikedByMe ? true : reactions.IsDislikedByMe ? false : null)
                         : null;
+                    return dto.Dto;
+                }).ToList();
+
+            // get number of comments in a single query
+            var commentsNumber = _context.Comments
+                .IgnoreQueryFilters()
+                .GroupBy(p => p.PostId).Select(g => new
+                {
+                    PostId = g.Key,
+                    CommentsNumber = g.Count()
+                });
+
+            // left outer join of dtos and comments numbers
+            dtos = dtos.GroupJoin(commentsNumber, d => d.Id, a => a.PostId,
+                    (dto, comments) => new { Dto = dto, Comments = comments })
+                .SelectMany(x => x.Comments.DefaultIfEmpty(), (dto, comments) =>
+                {
+                    dto.Dto.CommentsNumber = comments?.CommentsNumber ?? 0;
                     return dto.Dto;
                 }).ToList();
 

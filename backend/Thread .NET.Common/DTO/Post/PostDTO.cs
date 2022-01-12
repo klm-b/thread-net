@@ -18,6 +18,7 @@ namespace Thread_.NET.Common.DTO.Post
         public ICollection<CommentDTO> Comments { get; set; }
         public int LikesNumber { get; set; }
         public int DislikesNumber { get; set; }
+        public int CommentsNumber { get; set; }
         public bool? IsLikedByMe { get; set; }
     }
 }
