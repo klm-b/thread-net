@@ -19,9 +19,10 @@ import { MaterialComponentsModule } from './components/common/material-component
 import { UpdatePostDialogComponent } from './components/post/update-post-dialog/update-post-dialog.component';
 import { DeletePostDialogComponent } from './components/post/delete-post-dialog/delete-post-dialog.component';
 import { ReactionsDialogComponent } from './components/post/reactions-dialog/reactions-dialog.component';
+import { UpdateCommentDialogComponent } from './components/comment/update-comment-dialog/update-comment-dialog.component';
 
 @NgModule({
-    declarations: [AppComponent, MainThreadComponent, PostComponent, HomeComponent, UserProfileComponent, AuthDialogComponent, CommentComponent, UpdatePostDialogComponent, DeletePostDialogComponent, ReactionsDialogComponent],
+    declarations: [AppComponent, MainThreadComponent, PostComponent, HomeComponent, UserProfileComponent, AuthDialogComponent, CommentComponent, UpdatePostDialogComponent, DeletePostDialogComponent, ReactionsDialogComponent, UpdateCommentDialogComponent],
     imports: [BrowserModule, BrowserAnimationsModule, HttpClientModule, MaterialComponentsModule, RouterModule.forRoot(AppRoutes), FormsModule],
     exports: [MaterialComponentsModule],
     providers: [

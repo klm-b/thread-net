@@ -110,6 +110,7 @@ export class PostComponent implements OnDestroy {
                     if (resp) {
                         this.comments = this.sortCommentArray(this.comments.concat(resp.body));
                         this.newComment.body = undefined;
+                        this.post.commentsNumber++;
                     }
                 },
                 (error) => this.snackBarService.showErrorMessage(error)

@@ -15,19 +15,21 @@
         <mat-icon>thumbs_up_down</mat-icon>
         <span>Reactions</span>
       </button>
-      <button mat-menu-item>
-        <mat-icon>edit</mat-icon>
-        <span>Edit</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>delete</mat-icon>
-        <span>Delete</span>
-      </button>
+      <ng-template [ngIf]="currentUser?.id === comment.author.id">
+        <button (click)="openUpdatePostDialog(comment)" mat-menu-item>
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </ng-template>
     </mat-menu>
   </div>
 
   <mat-card-content>
-    <p>{{comment.body}}</p>
+    <p class="comment-body">{{comment.body}}</p>
   </mat-card-content>
   <mat-card-actions class="actions-buttons">
     <button mat-icon-button [color]="comment.isLikedByMe ? 'accent': 'primary'" color="primary">

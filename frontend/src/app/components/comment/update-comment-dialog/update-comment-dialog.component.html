@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Edit comment</h2>
+<mat-dialog-content>
+    <div *ngIf="loading" class="mat-spinner-wrapper">
+        <mat-spinner></mat-spinner>
+    </div>
+    <mat-form-field>
+        <textarea [(ngModel)]="comment.body" cdkTextareaAutosize matInput placeholder="Edit comment..."></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [disabled]="loading" color="primary" matTooltip="Save comment"
+        (click)="updateComment()">Save</button>
+</mat-dialog-actions>
