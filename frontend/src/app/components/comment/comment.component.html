@@ -32,12 +32,13 @@
     <p class="comment-body">{{comment.body}}</p>
   </mat-card-content>
   <mat-card-actions class="actions-buttons">
-    <button mat-icon-button [color]="comment.isLikedByMe ? 'accent': 'primary'" color="primary">
+    <button mat-icon-button [color]="comment.isLikedByMe ? 'accent': 'primary'" color="primary"
+      (click)="reactToComment(true)">
       <mat-icon aria-label="Like">thumb_up</mat-icon>
       <span *ngIf="comment.likesNumber > 0">{{comment.likesNumber}}</span>
     </button>
     <button mat-icon-button [color]="comment.isLikedByMe === false ? 'warn': 'primary'"
-      [style.margin-left]="comment.likesNumber > 0 ? '16px' : '0'">
+      [style.margin-left]="comment.likesNumber > 0 ? '16px' : '0'" (click)="reactToComment(false)">
       <mat-icon aria-label="Dislike">thumb_down</mat-icon>
       <span *ngIf="comment.dislikesNumber > 0">{{comment.dislikesNumber}}</span>
     </button>

@@ -131,7 +131,7 @@ namespace Thread_.NET.DAL.Context
                 Password = hashedPassword,
                 Salt = salt,
                 UserName = "testUser",
-                Avatar = new Image { URL = "https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png" }
+                // Avatar = new Image { URL = "https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png" }
             };
 
             generatedUsers.Add(myUser);

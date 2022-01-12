@@ -4,6 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { UpdateComment } from 'src/app/models/comment/update-comment';
 import { User } from 'src/app/models/user';
 import { CommentDialogsService } from 'src/app/services/comment-dialogs.service';
+import { ReactionService } from 'src/app/services/reaction.service';
 import { Comment } from '../../models/comment/comment';
 
 @Component({
@@ -19,7 +20,7 @@ export class CommentComponent {
 
     @Output() onDelete = new EventEmitter<number>();
 
-    public constructor(private commentDialogsService: CommentDialogsService) {}
+    public constructor(private commentDialogsService: CommentDialogsService, private reactionsService: ReactionService) {}
 
     public openUpdateCommentDialog(comment: Comment) {
         this.commentDialogsService.openUpdateCommentDialog(comment)
@@ -42,5 +43,12 @@ export class CommentComponent {
                     this.onDelete.next(comment.id);
                 }
             })
+    }
+
+    public reactToComment(isLike: boolean) {
+        this.reactionsService
+            .reactToComment(this.comment, this.currentUser, isLike)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((post) => (this.comment = post));
     }
 }

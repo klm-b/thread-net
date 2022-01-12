@@ -6,12 +6,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { map, takeUntil } from 'rxjs/operators';
 import { AuthenticationService } from './auth.service';
 import { Subscription, Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthDialogService implements OnDestroy {
     private unsubscribe$ = new Subject<void>();
 
-    public constructor(private dialog: MatDialog, private authService: AuthenticationService) {}
+    public constructor(private dialog: MatDialog, private authService: AuthenticationService, private router: Router) {}
 
     public openAuthDialog(type: DialogType) {
         const dialog = this.dialog.open(AuthDialogComponent, {
@@ -24,7 +25,7 @@ export class AuthDialogService implements OnDestroy {
         dialog
             .afterClosed()
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe();
+            .subscribe(() => window.location.reload());
     }
 
     public ngOnDestroy() {
