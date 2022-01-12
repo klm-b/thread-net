@@ -94,5 +94,20 @@ namespace Thread_.NET.BLL.Services
             // var updatedCommentDTO = _mapper.Map<CommentDTO>(commentEntity);
             // await _commentHub.Clients.All.SendAsync("UpdateComment", updatedCommentDTO);
         }
+
+        public async Task DeleteComment(int commentId)
+        {
+            var commentEntity = await _context.Comments.FirstOrDefaultAsync(u => u.Id == commentId);
+
+            if (commentEntity == null)
+            {
+                throw new NotFoundException(nameof(Comment), commentId);
+            }
+
+            _context.Comments.Remove(commentEntity);
+            await _context.SaveChangesAsync();
+
+            // await _commentHub.Clients.All.SendAsync("DeleteComment", commentId);
+        }
     }
 }

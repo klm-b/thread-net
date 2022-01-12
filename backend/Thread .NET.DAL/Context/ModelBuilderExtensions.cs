@@ -54,9 +54,9 @@ namespace Thread_.NET.DAL.Context
                 .HasForeignKey(r => r.CommentId);
 
             modelBuilder.Entity<Post>().HasQueryFilter(p => !p.IsDeleted);
-            modelBuilder.Entity<Comment>().HasQueryFilter(p => !p.Post.IsDeleted);
+            modelBuilder.Entity<Comment>().HasQueryFilter(p => !p.IsDeleted && !p.Post.IsDeleted);
             modelBuilder.Entity<PostReaction>().HasQueryFilter(p => !p.Post.IsDeleted);
-            modelBuilder.Entity<CommentReaction>().HasQueryFilter(p => !p.Comment.Post.IsDeleted);
+            modelBuilder.Entity<CommentReaction>().HasQueryFilter(p => !p.Comment.IsDeleted);
         }
 
         public static void Seed(this ModelBuilder modelBuilder)

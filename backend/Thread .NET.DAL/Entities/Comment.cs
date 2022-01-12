@@ -3,7 +3,7 @@ using Thread_.NET.DAL.Entities.Abstract;
 
 namespace Thread_.NET.DAL.Entities
 {
-    public sealed class Comment : BaseEntity
+    public sealed class Comment : BaseEntity, ISoftDeletable
     {
         public Comment()
         {
@@ -17,6 +17,8 @@ namespace Thread_.NET.DAL.Entities
         public Post Post { get; set; }
 
         public string Body { get; set; }
+
+        public bool IsDeleted { get; set; }
 
         public ICollection<CommentReaction> Reactions { get; private set; }
     }

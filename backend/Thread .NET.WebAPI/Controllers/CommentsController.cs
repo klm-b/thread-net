@@ -40,5 +40,12 @@ namespace Thread_.NET.WebAPI.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            await _commentService.DeleteComment(id);
+            return NoContent();
+        }
     }
 }
