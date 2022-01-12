@@ -16,11 +16,11 @@
         <span>Reactions</span>
       </button>
       <ng-template [ngIf]="currentUser?.id === comment.author.id">
-        <button (click)="openUpdatePostDialog(comment)" mat-menu-item>
+        <button (click)="openUpdateCommentDialog(comment)" mat-menu-item>
           <mat-icon>edit</mat-icon>
           <span>Edit</span>
         </button>
-        <button mat-menu-item>
+        <button (click)="openDeleteCommentDialog(comment)" mat-menu-item>
           <mat-icon>delete</mat-icon>
           <span>Delete</span>
         </button>

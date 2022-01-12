@@ -56,9 +56,9 @@ export class MainThreadComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.registerHub();
-
-        if (!this.authService.areTokensExist())
-            this.getPosts();
+        // todo: fix dublicate requests
+        this.getUser()
+        this.getPosts()
 
         this.eventService.userChangedEvent$.pipe(takeUntil(this.unsubscribe$)).subscribe((user) => {
             if (this.currentUser !== user)

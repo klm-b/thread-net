@@ -108,13 +108,20 @@ export class PostComponent implements OnDestroy {
             .subscribe(
                 (resp) => {
                     if (resp) {
-                        this.comments = this.sortCommentArray(this.comments.concat(resp.body));
+                        this.comments = this.comments ? this.sortCommentArray(this.comments.concat(resp.body)) : [resp.body];
                         this.newComment.body = undefined;
                         this.post.commentsNumber++;
                     }
                 },
                 (error) => this.snackBarService.showErrorMessage(error)
             );
+    }
+
+    public deleteComment(id: number) {
+        if (this.comments.some((x) => x.id === id)) {
+            this.comments = this.sortCommentArray(this.comments.filter(comment => comment.id != id));
+            this.post.commentsNumber--;
+        }
     }
 
     public openAuthDialog() {

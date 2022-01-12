@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UpdateComment } from 'src/app/models/comment/update-comment';
@@ -17,9 +17,11 @@ export class CommentComponent {
 
     private unsubscribe$ = new Subject<void>();
 
+    @Output() onDelete = new EventEmitter<number>();
+
     public constructor(private commentDialogsService: CommentDialogsService) {}
 
-    public openUpdatePostDialog(comment: Comment) {
+    public openUpdateCommentDialog(comment: Comment) {
         this.commentDialogsService.openUpdateCommentDialog(comment)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
@@ -30,5 +32,15 @@ export class CommentComponent {
                     }
                 }
             )
+    }
+
+    public openDeleteCommentDialog(comment: Comment) {
+        this.commentDialogsService.openDeleteCommentDialog(comment)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((isDeleted: Boolean) => {
+                if (isDeleted) {
+                    this.onDelete.next(comment.id);
+                }
+            })
     }
 }
