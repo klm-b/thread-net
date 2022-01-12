@@ -67,7 +67,6 @@ namespace Thread_.NET.BLL.Services
 
             // get number of comments in a single query
             var commentsNumber = _context.Comments
-                .IgnoreQueryFilters()
                 .GroupBy(p => p.PostId).Select(g => new
                 {
                     PostId = g.Key,
